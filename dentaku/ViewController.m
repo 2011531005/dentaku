@@ -10,12 +10,15 @@
 
 @interface ViewController ()
 
+
 @end
+@implementation ViewController{
+    NSString *operation;
+    NSString *number;
+//    enum {start,operetion,second} state;
+}
 
-@implementation ViewController
-
-- (void)viewDidLoad
-{
+- (void)viewDidLoad{
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
@@ -26,6 +29,7 @@
         UIButton *button = (UIButton*)anObject;
         button.tag = [button.titleLabel.text intValue];
     }
+    [self initDentaku];
 }
 
 - (void)didReceiveMemoryWarning
@@ -38,15 +42,121 @@
 - (IBAction)pushNumber:(id)sender {
     UIButton *button = (UIButton*)sender;
     //NSLog(@"Button.tag = %d", button.tag);
-    if(button.tag==0){
-        _LabelText.text = [NSString stringWithFormat:@"d",button.tag];
-        startInput=NO;
-    }else{
-        _LabelText.text=[NSString stringWithFormat:@"%@%d",_LabelText.text,button.tag];
-    }
-       
+        
+    switch ([self state]) {
+        case start:
+            
+            if([[self LabelText].text isEqualToString:@"0"]){
+                    
+                [self LabelText].text = [NSString stringWithFormat:@"%d",button.tag];
+            }else{
+                [self LabelText].text=[NSString stringWithFormat:@"%@%d",[self LabelText].text,button.tag];
+            }
+            
+            break;
+            
+        case ope:
+            [self LabelText].text = [NSString stringWithFormat:@"%d",button.tag];
+            [self setState:second];
+            break;
+            
+            
+        case second:
+            [self LabelText].text=[NSString stringWithFormat:@"%@%d",[self LabelText].text,button.tag];
+            break;
+        default:
+            break;
+    
     }
 }
 
--(IBAction)clearBtn
+-(IBAction)clearBtn:(id)sender{
+   
+    [self initDentaku];
+}
+-(IBAction)optionBtn:(id)sender{
+    NSArray *decide = [NSArray arrayWithObjects:@"+",@"-",@"×",@"/",nil];
+    UIButton *Button=(UIButton *)sender;
+    operation = decide[Button.tag];
+       
+    switch ([self state]) {
+        case start:
+            number = [self LabelText].text;
+            [self setState:ope];
+            break;
+            
+        case ope:
+            break;
+            
+        case second:
+            [self calc];
+            [self setState:ope];
+            break;
+            
+        default:
+            break;
+    }
+    
+        
+}
+
+-(IBAction)dot_down:(id)sender{
+    
+    switch ([self state]) {
+        case start:
+            NSRange *number = [[self Label] rangeOfString@"."];
+            if(searchResult.location == NSNotFound){
+                
+            }else{
+                
+            }
+
+            break;
+            
+        case ope:
+            break;
+            
+        case second:
+            
+            break;
+            
+        default:
+            break;
+    }
+    
+    
+    
+}
+-(IBAction)equal_down:(id)sender{
+    [self calc];
+}
+-(void)initDentaku{
+    
+    [self LabelText].text = @"0";
+    [self setState:start];
+}
+-(void)calc{
+    float result;
+    if([operation isEqualToString:@"+"]){
+        
+        result = [number floatValue] + [[self LabelText].text floatValue];
+        
+    }else if([operation isEqualToString:@"-"]){
+        
+        result = [number floatValue] - [[self LabelText].text floatValue];
+        
+    }else if([operation isEqualToString:@"×"]){
+        
+        
+        result = [number floatValue] * [[self LabelText].text floatValue];
+        
+    }else {
+        
+        result = [number floatValue] / [[self LabelText].text floatValue];
+        
+    }
+    [self LabelText].text = [NSString stringWithFormat:@"%g",result];
+    number = [self LabelText].text;    
+}
+
 @end
