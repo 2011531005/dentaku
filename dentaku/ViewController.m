@@ -100,33 +100,6 @@
         
 }
 
--(IBAction)dot_down:(id)sender{
-    
-    switch ([self state]) {
-        case start:
-            NSRange *number = [[self Label] rangeOfString@"."];
-            if(searchResult.location == NSNotFound){
-                
-            }else{
-                
-            }
-
-            break;
-            
-        case ope:
-            break;
-            
-        case second:
-            
-            break;
-            
-        default:
-            break;
-    }
-    
-    
-    
-}
 -(IBAction)equal_down:(id)sender{
     [self calc];
 }
